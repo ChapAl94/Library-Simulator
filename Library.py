@@ -29,7 +29,7 @@ class LibraryItem:
     def set_date_checked_out(self, check_out_date):
         """ Updates the date a library item is checked out"""
         self._date_checked_out = check_out_date
-        # return self._date_checked_out
+
 
     def get_checked_out_by(self):
         """Returns who checked out the library item"""
@@ -216,7 +216,7 @@ class Library:
                 check_out_patron.add_library_item(library_item_id)
                 check_out_lib_item.set_checked_out_by(patron_id)
                 check_out_lib_item.set_location("CHECKED_OUT")
-                check_out_lib_item.set_date_checked_out(0)
+                check_out_lib_item.set_date_checked_out(self._current_date)
                 check_out_lib_item.set_requested_by(None)
                 return "check out successful"
 
@@ -273,7 +273,8 @@ class Library:
         for patron in self._members:
             for library_item in self._holdings:
                 if library_item.get_checked_out_by() == patron.get_patron_id():
-                    if self._current_date > library_item.get_check_out_length():
+                    days_item_checked_out = self._current_date - library_item.get_date_checked_out()
+                    if days_item_checked_out > library_item.get_check_out_length():
                         patron.ammend_fine(0.1)
                     else:
                         pass
